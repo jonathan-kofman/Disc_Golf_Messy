@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Save, PlusCircle, Trash2, Flag, RotateCcw, Share2, BarChart2, ChevronLeft, Award, Target, Clock, Star, Zap, Loader, Disc, Trophy, ArrowRight, Users, Home } from 'lucide-react';
+import { Save, PlusCircle, Trash2, Flag, RotateCcw, Share2, BarChart2, ChevronLeft, Award, Target, Clock, Star, Zap, Loader, Disc, Trophy, ArrowRight, Users, Home, Smile, Sparkles, Activity, Map, Gamepad2, Leaf } from 'lucide-react';
 import CourseList from '../components/CourseList';
 import RoundTracker from '../components/RoundTracker';
 import PracticeMode from '../components/PracticeMode';
@@ -8,6 +8,8 @@ import ShareRound from '../components/ShareRound';
 import Achievements from '../components/Achievements';
 import FamilyMode from '../components/FamilyMode';
 import BackyardDesigner from '../components/BackyardDesigner';
+import KidsMode from '../components/KidsMode';
+import ThreeDScene from '../components/ThreeDScene'; // Import the ThreeDScene component
 import useCourses from '../hooks/useCourses';
 import useRounds from '../hooks/useRounds';
 import usePracticeStats from '../hooks/usePracticeStats';
@@ -32,6 +34,7 @@ const DiscGolfTracker = () => {
   const [showAchievements, setShowAchievements] = useState(false);
   const [showFamilyMode, setShowFamilyMode] = useState(false);
   const [showBackyardDesigner, setShowBackyardDesigner] = useState(false);
+  const [showKidsMode, setShowKidsMode] = useState(false);
 
   // Add state for confirmation dialogs
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -174,6 +177,8 @@ const DiscGolfTracker = () => {
       setShowFamilyMode(false);
     } else if (showBackyardDesigner) {
       setShowBackyardDesigner(false);
+    } else if (showKidsMode) {
+      setShowKidsMode(false);
     }
   };
 
@@ -284,6 +289,153 @@ const DiscGolfTracker = () => {
     };
   };
 
+  const renderMainMenu = () => (
+    <div className="min-h-screen bg-gradient-to-b from-green-50 via-blue-50 to-purple-50 p-4">
+      <div className="max-w-6xl mx-auto">
+        {/* 3D Background Scene */}
+        <div className="absolute inset-0 -z-10 opacity-20">
+          <ThreeDScene sceneUrl="https://prod.spline.design/your-main-menu-scene" />
+        </div>
+
+        {/* Hero Section with Animated Background */}
+        <div className="relative overflow-hidden rounded-2xl mb-8">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGMwIDIuMjEgMS43OSA0IDQgNHM0LTEuNzkgNC00LTEuNzktNC00LTQtNCAxLjc5LTQgNHoiIGZpbGw9IiNlOGY1ZjAiLz48L2c+PC9zdmc+')] opacity-10 animate-pulse"></div>
+          <div className="relative p-8 text-center">
+            <div className="inline-flex items-center justify-center p-4 rounded-full bg-white/20 backdrop-blur-sm mb-4 animate-bounce">
+              <Disc className="h-12 w-12 text-green-600 animate-spin-slow" />
+            </div>
+            <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
+              <span className="block">Disc Golf</span>
+              <span className="block text-green-600">Tracker</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Track your rounds, improve your game, and connect with fellow disc golfers.
+            </p>
+          </div>
+        </div>
+
+        {/* Quick Stats Banner */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-center p-3 rounded-full bg-green-100 mb-4">
+              <Flag className="h-8 w-8 text-green-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 text-center">{courses.length}</h3>
+            <p className="text-sm text-gray-600 text-center">Courses</p>
+          </div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-center p-3 rounded-full bg-blue-100 mb-4">
+              <Target className="h-8 w-8 text-blue-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 text-center">{completedRounds.length}</h3>
+            <p className="text-sm text-gray-600 text-center">Rounds Played</p>
+          </div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-center p-3 rounded-full bg-purple-100 mb-4">
+              <Trophy className="h-8 w-8 text-purple-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 text-center">{practiceStats.achievements.length}</h3>
+            <p className="text-sm text-gray-600 text-center">Achievements</p>
+          </div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-center p-3 rounded-full bg-yellow-100 mb-4">
+              <Users className="h-8 w-8 text-yellow-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 text-center">4</h3>
+            <p className="text-sm text-gray-600 text-center">Family Members</p>
+          </div>
+        </div>
+
+        {/* Main Menu Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <button
+            onClick={() => setShowNewCourseForm(true)}
+            className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex flex-col items-center">
+              <div className="p-4 rounded-full bg-blue-100 mb-4 group-hover:bg-blue-200 transition-colors duration-300">
+                <Flag className="h-8 w-8 text-blue-600" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">Courses</span>
+              <p className="text-sm text-gray-600 mt-2 text-center">Browse and manage your courses</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowPracticeMode(true)}
+            className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex flex-col items-center">
+              <div className="p-4 rounded-full bg-green-100 mb-4 group-hover:bg-green-200 transition-colors duration-300">
+                <Target className="h-8 w-8 text-green-600" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">Practice Mode</span>
+              <p className="text-sm text-gray-600 mt-2 text-center">Improve your skills</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowFamilyMode(true)}
+            className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex flex-col items-center">
+              <div className="p-4 rounded-full bg-purple-100 mb-4 group-hover:bg-purple-200 transition-colors duration-300">
+                <Users className="h-8 w-8 text-purple-600" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">Family Mode</span>
+              <p className="text-sm text-gray-600 mt-2 text-center">Play together as a family</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowKidsMode(true)}
+            className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex flex-col items-center">
+              <div className="p-4 rounded-full bg-yellow-100 mb-4 group-hover:bg-yellow-200 transition-colors duration-300">
+                <Smile className="h-8 w-8 text-yellow-600" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">Kids Mode</span>
+              <p className="text-sm text-gray-600 mt-2 text-center">Fun games for young players</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowBackyardDesigner(true)}
+            className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex flex-col items-center">
+              <div className="p-4 rounded-full bg-red-100 mb-4 group-hover:bg-red-200 transition-colors duration-300">
+                <Home className="h-8 w-8 text-red-600" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">Backyard Designer</span>
+              <p className="text-sm text-gray-600 mt-2 text-center">Create your own course</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowStats(true)}
+            className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex flex-col items-center">
+              <div className="p-4 rounded-full bg-indigo-100 mb-4 group-hover:bg-indigo-200 transition-colors duration-300">
+                <BarChart2 className="h-8 w-8 text-indigo-600" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">Statistics</span>
+              <p className="text-sm text-gray-600 mt-2 text-center">Track your progress</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   if (showPracticeMode) {
     return <PracticeMode onBack={() => goBack('practice')} />;
   }
@@ -334,156 +486,35 @@ const DiscGolfTracker = () => {
     return <BackyardDesigner onBack={() => goBack('designer')} />;
   }
 
+  if (showKidsMode) {
+    return <KidsMode onBack={() => goBack('kids')} />;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGMwIDIuMjEgMS43OSA0IDQgNHM0LTEuNzkgNC00LTEuNzktNC00LTQtNCAxLjc5LTQgNHoiIGZpbGw9IiNlOGY1ZjAiLz48L2c+PC9zdmc+')] opacity-10"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center p-3 rounded-full bg-green-100 mb-4">
-              <Disc className="h-8 w-8 text-green-600 animate-spin-slow" />
-            </div>
-            <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-              <span className="block">Disc Golf</span>
-              <span className="block text-green-600">Tracker</span>
-            </h1>
-            <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-              Track your rounds, improve your game, and connect with fellow disc golfers.
-            </p>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 p-4">
+      <div className="max-w-6xl mx-auto">
+        {showNewCourseForm ? (
+          <CourseList
+            onBack={() => goBack('newCourse')}
+            onSelectCourse={startRound}
+            onAddCourse={() => setShowNewCourseForm(true)}
+          />
+        ) : showPracticeMode ? (
+          <PracticeMode onBack={() => goBack('practice')} />
+        ) : showFamilyMode ? (
+          <FamilyMode onBack={() => goBack('family')} />
+        ) : showKidsMode ? (
+          <KidsMode onBack={() => goBack('kids')} />
+        ) : showBackyardDesigner ? (
+          <BackyardDesigner onBack={() => goBack('designer')} />
+        ) : showStats ? (
+          <Statistics onBack={() => goBack('stats')} />
+        ) : (
+          <div>
+            <h1 className="text-3xl font-bold text-center mb-8">Disc Golf Tracker</h1>
+            {renderMainMenu()}
           </div>
-        </div>
-      </div>
-
-      {/* Quick Stats Banner */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <div className="bg-white rounded-lg shadow-lg p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="text-center p-4 bg-green-50 rounded-lg transform hover:scale-105 transition-transform">
-            <div className="inline-flex items-center justify-center p-3 rounded-full bg-green-100 mb-2">
-              <Flag className="h-6 w-6 text-green-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900">{courses.length}</h3>
-            <p className="text-sm text-gray-500">Courses</p>
-          </div>
-          <div className="text-center p-4 bg-blue-50 rounded-lg transform hover:scale-105 transition-transform">
-            <div className="inline-flex items-center justify-center p-3 rounded-full bg-blue-100 mb-2">
-              <Target className="h-6 w-6 text-blue-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900">{completedRounds.length}</h3>
-            <p className="text-sm text-gray-500">Rounds Played</p>
-          </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg transform hover:scale-105 transition-transform">
-            <div className="inline-flex items-center justify-center p-3 rounded-full bg-purple-100 mb-2">
-              <Trophy className="h-6 w-6 text-purple-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900">{practiceStats.achievements.length}</h3>
-            <p className="text-sm text-gray-500">Achievements</p>
-          </div>
-          <div className="text-center p-4 bg-yellow-50 rounded-lg transform hover:scale-105 transition-transform">
-            <div className="inline-flex items-center justify-center p-3 rounded-full bg-yellow-100 mb-2">
-              <Users className="h-6 w-6 text-yellow-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900">4</h3>
-            <p className="text-sm text-gray-500">Family Members</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Your Courses</h2>
-          <div className="flex space-x-3">
-            <button 
-              onClick={() => setShareMode(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              disabled={completedRounds.length === 0}
-            >
-              <Share2 className="h-4 w-4 mr-2" />
-              Share
-            </button>
-            <button 
-              onClick={() => setShowStats(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              disabled={completedRounds.length === 0}
-            >
-              <BarChart2 className="h-4 w-4 mr-2" />
-              Stats
-            </button>
-            <button 
-              onClick={() => setShowAchievements(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-200"
-            >
-              <Trophy className="h-4 w-4 mr-2" />
-              Achievements
-            </button>
-            <button 
-              onClick={() => setShowFamilyMode(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Family Mode
-            </button>
-            <button 
-              onClick={() => setShowNewCourseForm(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
-            >
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Add Course
-            </button>
-          </div>
-        </div>
-
-        <CourseList
-          courses={courses}
-          onStartRound={startRound}
-          onAddCourse={() => setShowNewCourseForm(true)}
-          isLoading={coursesLoading}
-          error={coursesError}
-          onClearError={clearCoursesError}
-        />
-
-        {/* Practice Mode Card */}
-        <div className="mt-12 bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Practice Mode</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Improve your skills with targeted practice challenges
-                </p>
-              </div>
-              <button
-                onClick={() => setShowPracticeMode(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
-              >
-                Start Practice
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Backyard Designer Card */}
-        <div className="mt-12 bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Backyard Course Designer</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Create your own backyard disc golf course
-                </p>
-              </div>
-              <button
-                onClick={() => setShowBackyardDesigner(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200"
-              >
-                Design Course
-                <Home className="ml-2 h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
