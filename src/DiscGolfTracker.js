@@ -6,14 +6,19 @@ import PracticeMode from './components/PracticeMode';
 import Statistics from './components/Statistics';
 import ShareRound from './components/ShareRound';
 import Achievements from './components/Achievements';
-import { useCourses } from './hooks/useCourses';
-import { useRounds } from './hooks/useRounds';
-import { usePracticeStats } from './hooks/usePracticeStats';
+import useCourses from './hooks/useCourses';
+import useRounds from './hooks/useRounds';
+import usePracticeStats from './hooks/usePracticeStats';
 
 const DiscGolfTracker = () => {
-  const { courses, addCourse } = useCourses();
-  const { completedRounds, addRound } = useRounds();
-  const { practiceStats, updateStats } = usePracticeStats();
+  const { courses = [], addCourse } = useCourses();
+  const { completedRounds = [], addRound } = useRounds();
+  const { practiceStats = {
+    targetChallenge: { bestAccuracy: 0, gamesPlayed: 0, lastScore: 0 },
+    speedChallenge: { bestTime: null, gamesPlayed: 0, lastTime: null },
+    consistencyChallenge: { bestStreak: 0, totalThrows: 0, gamesPlayed: 0 },
+    achievements: []
+  }, updateStats } = usePracticeStats();
   
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [currentRound, setCurrentRound] = useState(null);
@@ -31,22 +36,35 @@ const DiscGolfTracker = () => {
 
   // Load data from localStorage on initial render
   useEffect(() => {
-    const savedRounds = localStorage.getItem('completedRounds');
-    const savedCourses = localStorage.getItem('courses');
-    const savedPracticeStats = localStorage.getItem('practiceStats');
-    
-    if (savedRounds) {
-      completedRounds(JSON.parse(savedRounds));
+    try {
+      const savedRounds = localStorage.getItem('completedRounds');
+      const savedCourses = localStorage.getItem('courses');
+      const savedPracticeStats = localStorage.getItem('practiceStats');
+      
+      if (savedRounds) {
+        const parsedRounds = JSON.parse(savedRounds);
+        if (Array.isArray(parsedRounds)) {
+          parsedRounds.forEach(round => addRound(round));
+        }
+      }
+      
+      if (savedCourses) {
+        const parsedCourses = JSON.parse(savedCourses);
+        if (Array.isArray(parsedCourses)) {
+          parsedCourses.forEach(course => addCourse(course));
+        }
+      }
+      
+      if (savedPracticeStats) {
+        const parsedStats = JSON.parse(savedPracticeStats);
+        if (parsedStats && typeof parsedStats === 'object') {
+          updateStats(parsedStats);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading saved data:', error);
     }
-    
-    if (savedCourses) {
-      courses(JSON.parse(savedCourses));
-    }
-    
-    if (savedPracticeStats) {
-      practiceStats(JSON.parse(savedPracticeStats));
-    }
-  }, []);
+  }, [addRound, addCourse, updateStats]);
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
@@ -352,14 +370,14 @@ const DiscGolfTracker = () => {
           <button 
             onClick={() => setShareMode(true)}
             className="bg-blue-500 text-white px-3 py-1 rounded flex items-center text-sm"
-            disabled={completedRounds.length === 0}
+            disabled={!completedRounds || completedRounds.length === 0}
           >
             <Share2 size={16} className="mr-1" /> Share
           </button>
           <button 
             onClick={() => setShowStats(true)}
             className="bg-purple-500 text-white px-3 py-1 rounded flex items-center text-sm"
-            disabled={completedRounds.length === 0}
+            disabled={!completedRounds || completedRounds.length === 0}
           >
             <BarChart2 size={16} className="mr-1" /> Stats
           </button>
@@ -387,19 +405,19 @@ const DiscGolfTracker = () => {
         <div className="mt-3 grid grid-cols-3 gap-2">
           <div className="bg-green-50 p-2 rounded text-center">
             <div className="text-sm text-gray-500">Target</div>
-            <div className="font-bold">{practiceStats.targetChallenge.bestAccuracy > 0 ? `${practiceStats.targetChallenge.bestAccuracy}%` : '-'}</div>
+            <div className="font-bold">{practiceStats?.targetChallenge?.bestAccuracy > 0 ? `${practiceStats.targetChallenge.bestAccuracy}%` : '-'}</div>
           </div>
           <div className="bg-blue-50 p-2 rounded text-center">
             <div className="text-sm text-gray-500">Speed</div>
-            <div className="font-bold">{practiceStats.speedChallenge.bestTime ? `${practiceStats.speedChallenge.bestTime.toFixed(1)}s` : '-'}</div>
+            <div className="font-bold">{practiceStats?.speedChallenge?.bestTime ? `${practiceStats.speedChallenge.bestTime.toFixed(1)}s` : '-'}</div>
           </div>
           <div className="bg-yellow-50 p-2 rounded text-center">
             <div className="text-sm text-gray-500">Streak</div>
-            <div className="font-bold">{practiceStats.consistencyChallenge.bestStreak || '-'}</div>
+            <div className="font-bold">{practiceStats?.consistencyChallenge?.bestStreak || '-'}</div>
           </div>
         </div>
         
-        {practiceStats.achievements.length > 0 && (
+        {practiceStats?.achievements?.length > 0 && (
           <div className="mt-3 flex justify-between items-center">
             <div className="flex items-center">
               <Award size={16} className="text-yellow-500 mr-1" />
@@ -415,14 +433,14 @@ const DiscGolfTracker = () => {
         )}
       </div>
       
-      {courses.length > 0 ? (
+      {courses && courses.length > 0 ? (
         <div className="space-y-3">
           {courses.map(course => (
             <div key={course.id} className="bg-white rounded-lg p-4 shadow">
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-lg font-bold">{course.name}</h2>
-                  <p className="text-sm text-gray-500">{course.holes.length} holes</p>
+                  <p className="text-sm text-gray-500">{course.holes?.length || 0} holes</p>
                 </div>
                 <button 
                   onClick={() => startRound(course)}

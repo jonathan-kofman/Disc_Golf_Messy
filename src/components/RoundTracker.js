@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Save, Trash2, Flag } from 'lucide-react';
-import { useRounds } from '../hooks/useRounds';
+import useRounds from '../hooks/useRounds';
 
 const RoundTracker = ({ round, onBack }) => {
   const [currentRound, setCurrentRound] = useState(round);

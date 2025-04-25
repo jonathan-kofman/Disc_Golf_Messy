@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, Target, Clock, Zap } from 'lucide-react';
+import { Award, Target, Clock, Zap, ChevronLeft } from 'lucide-react';
 
 const Achievements = ({ achievements, onBack }) => {
   return (
