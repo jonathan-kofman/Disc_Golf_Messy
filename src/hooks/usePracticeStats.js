@@ -35,7 +35,10 @@ const usePracticeStats = () => {
     setPracticeStats(newStats);
   };
 
-  return { practiceStats, updateStats };
+  return {
+    practiceStats,
+    updateStats
+  };
 };
 
 export default usePracticeStats; 

@@ -18,7 +18,10 @@ const useRounds = () => {
     setCompletedRounds([...completedRounds, round]);
   };
 
-  return { completedRounds, addRound };
+  return {
+    completedRounds,
+    addRound
+  };
 };
 
 export default useRounds; 
