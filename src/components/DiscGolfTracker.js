@@ -9,6 +9,7 @@ import Achievements from '../components/Achievements';
 import FamilyMode from '../components/FamilyMode';
 import BackyardDesigner from '../components/BackyardDesigner';
 import KidsMode from '../components/KidsMode';
+import FrisbeeTracker from '../components/FrisbeeTracker'; // Import the FrisbeeTracker component
 import ThreeDScene from '../components/ThreeDScene'; // Import the ThreeDScene component
 import useCourses from '../hooks/useCourses';
 import useRounds from '../hooks/useRounds';
@@ -16,6 +17,7 @@ import usePracticeStats from '../hooks/usePracticeStats';
 
 const DiscGolfTracker = () => {
   const { courses = [], addCourse, coursesLoading, coursesError, clearCoursesError } = useCourses();
+  const [showFrisbeeTracker, setShowFrisbeeTracker] = useState(false);
   const { completedRounds = [], addRound } = useRounds();
   const { practiceStats = {
     targetChallenge: { bestAccuracy: 0, gamesPlayed: 0, lastScore: 0 },
@@ -155,7 +157,6 @@ const DiscGolfTracker = () => {
     });
   };
   
-  // Add this function to handle back navigation from all screens
   const goBack = (source) => {
     if (currentRound) {
       handleConfirmDialogOpen('Are you sure you want to go back? Your current round will be lost.', () => {
@@ -179,6 +180,8 @@ const DiscGolfTracker = () => {
       setShowBackyardDesigner(false);
     } else if (showKidsMode) {
       setShowKidsMode(false);
+    } else if (showFrisbeeTracker) {
+      setShowFrisbeeTracker(false);
     }
   };
 
@@ -431,10 +434,30 @@ const DiscGolfTracker = () => {
               <p className="text-sm text-gray-600 mt-2 text-center">Track your progress</p>
             </div>
           </button>
+
+          {/* Add Frisbee Tracker button */}
+          <button
+            onClick={() => setShowFrisbeeTracker(true)}
+            className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-teal-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex flex-col items-center">
+              <div className="p-4 rounded-full bg-teal-100 mb-4 group-hover:bg-teal-200 transition-colors duration-300">
+                <Disc className="h-8 w-8 text-teal-600" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">Frisbee Tracker</span>
+              <p className="text-sm text-gray-600 mt-2 text-center">View sensor data from your smart frisbee</p>
+            </div>
+          </button>
         </div>
       </div>
     </div>
   );
+
+  // Add conditional rendering for FrisbeeTracker component
+  if (showFrisbeeTracker) {
+    return <FrisbeeTracker onBack={() => goBack('frisbeeTracker')} />;
+  }
 
   if (showPracticeMode) {
     return <PracticeMode onBack={() => goBack('practice')} />;
@@ -509,6 +532,8 @@ const DiscGolfTracker = () => {
           <BackyardDesigner onBack={() => goBack('designer')} />
         ) : showStats ? (
           <Statistics onBack={() => goBack('stats')} />
+        ) : showFrisbeeTracker ? (
+          <FrisbeeTracker onBack={() => goBack('frisbeeTracker')} />
         ) : (
           <div>
             <h1 className="text-3xl font-bold text-center mb-8">Disc Golf Tracker</h1>
